@@ -1,10 +1,12 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.cinchapi.concourse.Concourse;
 import org.cinchapi.concourse.thrift.Operator;
+import org.cinchapi.concourse.time.Time;
 
 /**
  * 
@@ -98,14 +100,18 @@ public class TwitterConcourse implements Twitter {
 	@Override
 	public void tweet(long userId, String message) {
 
-		if(concourse.fetch("tweet", userId).size()  == 0){
-			List<String> tweets =  new ArrayList<>();
-			tweets.add(message);
-			concourse.set("tweets", tweets, getIncrementId("tweets"));
-		} else {
-			Set<Object> tweets = concourse.fetch("tweets", userId);
-			tweets.add(message);
+		if(concourse.fetch("tweets", userId).size()  == 0){
+			Map<Long, String> tweets = new HashMap<Long, String>();
+			tweets.put(Time.now(), message);
 			concourse.set("tweets", tweets, userId);
+		} else {
+			Set<Object> tweetObject= concourse.fetch("tweets", userId);
+			for (Object tweet : tweetObject) {
+				Map<Long, String> tweets = (Map<Long, String>) tweet;
+				tweets.put(Time.now(), message);
+				concourse.set("tweets", tweets, userId);
+			}
+			
 		}
 	}
 
