@@ -51,7 +51,7 @@ public interface Twitter {
      * 
      * @param message
      */
-    public void tweet(long userId, String message);
+    public void tweet(String message);
     /**
      * Unfollow {@code username}.
      * 

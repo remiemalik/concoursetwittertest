@@ -22,7 +22,7 @@ public class TwitterCLI {
      */
     public static final Twitter twitter = new TwitterConcourse(); //FIXME
     
-    private static long userId;
+   
     /**
      * Run the program...
      * 
@@ -75,9 +75,8 @@ public class TwitterCLI {
                             String password = getInput("password>");
                             if(twitter.login(username, password)) {
                                 loggedIn = true;
-                                userId = twitter.findUserId(username);
                                 System.out.println("Successfully logged in as "
-                                        + username + "  (id:" + userId + ")");
+                                        + username );
                             }
                             else {
                                 System.err.println("Invalid username/password "
@@ -116,7 +115,7 @@ public class TwitterCLI {
                                 }
                                 message.append(toks[i]);
                             }
-                            twitter.tweet(userId, message.toString());
+                            twitter.tweet(message.toString());
                         }
                     }
                     else if(action.equalsIgnoreCase("follow") && loggedIn) {
@@ -136,7 +135,7 @@ public class TwitterCLI {
                         if(toks.length < 2) {
                             System.err.println("Please specify a username");
                         }
-                        else if(twitter.follow(toks[1])) {
+                        else if(twitter.unfollow(toks[1])) {
                             System.out.println("You are no longer following "
                                     + toks[1]);
                         }
